@@ -20,3 +20,10 @@ The trade-off: the parser is lenient. A malformed `max-age` is silently ignored 
 `report-uri` must be a double-quoted string per the grammar. `report-uri=foo` (no quotes) returns `undefined` for `reportUri`, not the raw token. If your test fixtures omit the quotes, this is the behaviour to expect.
 
 Duplicated `max-age` directives resolve to the **last** value, matching how browsers process duplicated directives in similar security headers.
+
+## Design notes
+
+The window stores values eagerly rather than keeping running aggregates. Running
+sums drift with floating point over long streams, and recomputing from a small
+buffer is cheap enough that the drift is not worth the speed.
+
